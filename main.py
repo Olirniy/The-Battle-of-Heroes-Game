@@ -193,7 +193,7 @@ class Game:
         self.print_status(damage, self.computer, self.player)
 
     def print_status(self, damage, attacker, defender):
-        print(f"❤️ {defender.name} здоровье: {max(defender.health, 0)}")
+        print(f"❤️У {defender.name} здоровье: {max(defender.health, 0)}")
         print("-" * 40)
 
     def declare_winner(self):
