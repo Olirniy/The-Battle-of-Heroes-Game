@@ -24,7 +24,7 @@ class Hero:
 
         # Проверка на уклонение
         if other.evade():
-            print(f"🎯 {other.name} УКЛОНИЛСЯ от атаки!")
+            print(f"🎯 {other.name} ЛОВКО УКЛОНИЛСЯ от атаки!")
             return 0  # Урон не наносится
 
         other.health -= damage
@@ -54,17 +54,35 @@ class Warrior(Hero):
             self.rage_charged = True
             self.special_charge = 0
             print(f"\n🔥 {self.name} впадает в БЕРСЕРКЕРСКУЮ ЯРОСТЬ!")
-            return 0
-        return super().attack(other)
 
-    def attack(self, other):
-        damage = super().attack(other)
-        if self.rage_charged:
-            bonus_damage = round(damage * 0.35)
+            # Рассчитываем базовый урон
+            if random.random() < self.critical_chance:
+                base_damage = round(self.attack_power * 1.5)
+                print(f"⚡ КРИТИЧЕСКИЙ УДАР! {self.name} наносит {base_damage} урона!")
+            else:
+                base_damage = self.attack_power
+                print(f"{self.name} атакует с силой {base_damage}")
+
+            other.health -= base_damage  # Наносим базовый урон
+
+            # Добавляем бонус от ярости
+            bonus_damage = round(base_damage * 0.35)
             other.health -= bonus_damage
             print(f"🔥 Ярость добавляет {bonus_damage} дополнительного урона!")
-            self.rage_charged = False
-        return damage
+
+            self.rage_charged = False  # Сбрасываем состояние ярости
+            return base_damage + bonus_damage
+        else:
+            return super().attack(other)
+
+    def attack(self, other):
+        # Проверяем, достаточно ли заряда для специальной атаки
+        if self.special_charge >= 30:
+            return self.special_attack(other)
+        else:
+            # Обычная атака
+            damage = super().attack(other)
+            return damage
 
 
 class Mage(Hero):
@@ -108,6 +126,8 @@ class Game:
         return classes[choice](name)
 
     def show_menu(self):
+        print("\n")
+        print("=" * 40)
         print("🎮 ДОБРО ПОЖАЛОВАТЬ В БИТВУ ГЕРОЕВ! 🎮")
         print("=" * 40)
         print("Выбери своего героя:")
