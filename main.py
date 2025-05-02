@@ -66,7 +66,7 @@ class Warrior(Hero):
             other.health -= base_damage  # Наносим базовый урон
 
             # Добавляем бонус от ярости
-            bonus_damage = round(base_damage * 0.35)
+            bonus_damage = round(base_damage * 0.65)
             other.health -= bonus_damage
             print(f"🔥 Ярость добавляет {bonus_damage} дополнительного урона!")
 
